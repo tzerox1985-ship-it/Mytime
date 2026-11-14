@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>CÔNG TY TNHH TAISHODO VIỆT NAM - Chấm Công & Thu Nhập Realtime</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    body { background-color: #0b1120; color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 6px; }
+    
+    /* Khung máy điện thoại tự động căn chỉnh tỷ lệ (Responsive Auto-layout) */
+    .mobile-frame {
+      width: 100%; max-width: 412px; background-color: #f8fafc; border-radius: 36px;
+      overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border: 8px solid #1e293b; display: flex; flex-direction: column; height: 95vh; max-height: 880px;
+    }
+    
+    .content-area {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+      scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;
+    }
+    .content-area::-webkit-scrollbar { width: 3px; }
+    .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+    /* ================= HEADER TỐI GỌN GÀNG ================= */
+    .top-dark-section {
+      background: #092923; color: white; padding: 12px 14px 14px 14px;
+      border-radius: 0 0 26px 26px; flex-shrink: 0;
+    }
+    
+    .header-user-row {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+    }
+    .user-left { display: flex; align-items: center; gap: 8px; }
+    .badge-ctt {
+      width: 32px; height: 32px; background: #00c853; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;
+      color: white; letter-spacing: 0.5px;
+    }
+    .user-info h2 {
+      font-size: 11.5px; font-weight: 700; color: white; display: flex; align-items: center; gap: 4px;
+    }
+    .pill-dept {
+      background: #00796b; color: white; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px;
+    }
+    .user-info p { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 1px; }
+    .user-info .id-hl { color: #f59e0b; font-weight: 700; }
+    
+    .btn-cloud {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px; padding: 3px 8px; font-size: 10.5px; font-weight: 600; color: white;
+      display: flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+    .btn-cloud span.dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; display: inline-block; }
+
+    /* Month Selector với Lịch sử hàng tháng */
+    .month-selector-row {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    }
+    .month-title {
+      font-size: 12px; font-weight: 800; color: white; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;
+    }
+    .month-nav-arrow {
+      cursor: pointer; opacity: 0.8; font-size: 15px; user-select: none; padding: 2px 6px;
+      background: rgba(255,255,255,0.1); border-radius: 6px; transition: all 0.15s;
+    }
+    .month-nav-arrow:hover { background: rgba(255,255,255,0.25); }
+    .toggle-pills {
+      background: rgba(0,0,0,0.3); padding: 2px; border-radius: 12px; display: flex; gap: 2px;
+    }
+    .toggle-pill-btn {
+      padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: 10px; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.7); background: transparent; transition: all 0.2s;
+    }
+    .toggle-pill-btn.active { background: #00897b; color: white; }
+
+    /* Dark Card */
+    .net-estimate-card {
+      background: #0f3b32; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 10px 12px;
+    }
+    .card-top-lbl {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;
+    }
+    .card-top-lbl span { font-size: 10px; color: #b2dfdb; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .badge-sync { font-size: 8.5px; color: #81c784; background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 6px; }
+    
+    .net-value-row {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    }
+    .big-vnd { font-size: 23px; font-weight: 800; color: white; }
+    .big-vnd small { font-size: 11px; font-weight: 700; color: #80cbc4; margin-left: 2px; }
+    
+    .btn-quick-checkin {
+      background: #ffb300; color: #1b2e28; border: none; padding: 5px 12px; border-radius: 16px;
+      font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px;
+      box-shadow: 0 3px 6px rgba(255, 179, 0, 0.3);
+    }
+
+    /* 4 Mini metric pills */
+    .mini-metrics-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+    }
+    .metric-pill {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 4px 2px; text-align: center;
+    }
+    .metric-pill .lbl { font-size: 8.5px; color: rgba(255,255,255,0.6); margin-bottom: 1px; white-space: nowrap; }
+    .metric-pill .val { font-size: 10px; font-weight: 700; color: white; }
+
+    /* ================= BODY ================= */
+    .body-section { padding: 8px 10px 12px 10px; }
+
+    .company-mini-card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 6px 10px; display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .comp-left { display: flex; align-items: center; gap: 8px; }
+    .comp-icon {
+      width: 26px; height: 26px; background: #e8f5e9; color: #2e7d32; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .comp-text h4 { font-size: 11px; font-weight: 700; color: #1e293b; }
+    .comp-text p { font-size: 9.5px; color: #64748b; }
+    .btn-edit-profile {
+      background: white; border: 1px solid #cbd5e1; border-radius: 6px;
+      padding: 3px 8px; font-size: 9.5px; font-weight: 600; color: #475569; cursor: pointer;
+    }
+
+    .income-structure-card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 14px;
+      padding: 10px; margin-bottom: 8px;
+    }
+    .section-header-row {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: 11px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 4px;
+    }
+    .pill-ot-rate {
+      background: #e0f2f1; color: #00796b; font-size: 9.5px; font-weight: 700;
+      padding: 2px 7px; border-radius: 5px;
+    }
+
+    .income-row-box {
+      border-radius: 8px; padding: 5px 8px; margin-bottom: 4px; display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .bg-row-normal { background: #f8fafc; border: 1px solid #e2e8f0; }
+    .bg-row-blue { background: #f0f9ff; border: 1px solid #bae6fd; }
+    .bg-row-red { background: #fef2f2; border: 1px solid #fecaca; }
+    
+    .income-row-box .txt-left h5 { font-size: 11px; font-weight: 700; color: #1e293b; }
+    .income-row-box .txt-left p { font-size: 9.5px; color: #64748b; }
+    .income-row-box .val-right { font-size: 12px; font-weight: 700; white-space: nowrap; }
+    
+    .color-green { color: #00897b; }
+    .color-blue { color: #0284c7; }
+    .color-red { color: #dc2626; }
+
+    .summary-footer-bar {
+      background: #f1f5f9; border-radius: 9px; padding: 6px 10px; margin-top: 5px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .summary-footer-bar .gross-box span { font-size: 9.5px; color: #64748b; display: block; }
+    .summary-footer-bar .gross-box b { font-size: 12px; color: #1e293b; font-weight: 700; }
+    .summary-footer-bar .net-box { text-align: right; }
+    .summary-footer-bar .net-box span { font-size: 9.5px; color: #64748b; display: block; }
+    .summary-footer-bar .net-box b { font-size: 15px; color: #047857; font-weight: 800; }
+
+    .ot-rates-card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px;
+    }
+    .ot-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px;
+    }
+    .ot-rate-cell {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 7px;
+      padding: 5px 8px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .ot-rate-cell .lbl { font-size: 9.5px; color: #475569; line-height: 1.2; }
+    .ot-rate-cell .rate { font-size: 11.5px; font-weight: 800; color: #0f172a; white-space: nowrap; }
+
+    /* ================= TAB 2: LỊCH CHẤM CÔNG THÁNG ================= */
+    .calendar-container-card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 16px;
+      padding: 12px 10px; margin-bottom: 10px;
+    }
+    .cal-header-row {
+      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;
+    }
+    .cal-title-box h3 { font-size: 12.5px; font-weight: 800; color: #0f172a; }
+    .cal-title-box p { font-size: 10px; color: #64748b; margin-top: 1px; }
+    .cal-badge-target {
+      background: #e0f2f1; color: #00796b; font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+    }
+
+    .cal-legend-row {
+      display: flex; flex-wrap: wrap; gap: 8px; font-size: 9.5px; font-weight: 600;
+      color: #475569; padding: 6px 0 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 8px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 4px; }
+    .legend-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+    .dot-work { background: #00c853; }
+    .dot-leave { background: #f59e0b; }
+    .dot-holiday { background: #a855f7; }
+    .dot-ot { background: #0284c7; }
+
+    .cal-weekday-row {
+      display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+      font-size: 10.5px; font-weight: 700; color: #475569; margin-bottom: 6px;
+    }
+    .cal-weekday-row .sat { color: #d97706; }
+    .cal-weekday-row .sun { color: #dc2626; }
+
+    .cal-days-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    }
+    .cal-day-cell {
+      border: 1px solid #e2e8f0; border-radius: 10px; min-height: 44px; padding: 3px;
+      display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+      background: white; transition: all 0.15s; position: relative;
+    }
+    .cal-day-cell:active { transform: scale(0.95); }
+    .cal-day-cell.empty { border: none; background: transparent; cursor: default; }
+    .cal-day-cell.is-sun .day-num { color: #dc2626; }
+    .cal-day-cell .day-num { font-size: 11px; font-weight: 700; color: #1e293b; text-align: left; }
+    .cal-day-cell.selected { border-color: #00796b; background: #e0f2f1; }
+    
+    .cell-badges { display: flex; gap: 2px; align-items: center; margin-top: auto; }
+    .mini-badge-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .mini-ot-badge { font-size: 7.5px; font-weight: 800; background: #0284c7; color: white; border-radius: 3px; padding: 0 2px; }
+
+    .recent-logs-card {
+      background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px;
+    }
+    .recent-logs-card h4 { font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 6px; }
+
+    /* ================= FIXED BOTTOM NAV BAR ================= */
+    .bottom-nav-bar {
+      background: white; border-top: 1px solid #e2e8f0; padding: 5px 10px 8px 10px;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      font-size: 9.5px; color: #64748b; font-weight: 600; cursor: pointer; text-decoration: none;
+      border: none; background: transparent; padding: 2px 4px; border-radius: 12px;
+    }
+    .nav-item.active { color: #00796b; font-weight: 700; }
+    .nav-item.active .nav-icon-wrap {
+      background: #e0f2f1; padding: 2px 10px; border-radius: 10px;
+    }
+    .nav-icon { font-size: 15px; }
+
+    /* ================= MODAL SỬA CẤU HÌNH BHXH (2x2 GRID KHÔNG BỊ CHE KHUẤT) ================= */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none;
+      justify-content: center; align-items: flex-end; z-index: 100;
+    }
+    .modal-content {
+      background: white; width: 100%; max-width: 412px; border-radius: 22px 22px 0 0;
+      padding: 14px; max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.2); animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+      border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;
+    }
+    .modal-header h3 { font-size: 13.5px; font-weight: 800; color: #0f172a; }
+    .btn-close { font-size: 18px; border: none; background: transparent; cursor: pointer; color: #64748b; }
+    
+    .form-row { margin-bottom: 8px; }
+    .form-row label { display: block; font-size: 10.5px; font-weight: 700; color: #334155; margin-bottom: 2px; }
+    .form-row input, .form-row select {
+      width: 100%; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 12px;
+    }
+
+    .ins-rate-box {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; margin-bottom: 10px;
+    }
+    .ins-rate-box h4 { font-size: 11.5px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+    .ins-rate-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .ins-input-item label { font-size: 10px; font-weight: 700; color: #475569; display: block; margin-bottom: 2px; }
+    .ins-input-item input {
+      width: 100%; padding: 7px 9px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 12px; font-weight: 700;
+    }
+
+    .btn-save-modal {
+      width: 100%; background: #00796b; color: white; border: none; padding: 10px; border-radius: 9px;
+      font-size: 13px; font-weight: 800; cursor: pointer; margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-frame">
+  <!-- Content Area -->
+  <div class="content-area">
+    
+    <!-- KHỐI HEADER XANH ĐEN GỌN GÀNG -->
+    <div class="top-dark-section">
+      <div class="header-user-row">
+        <div class="user-left">
+          <div class="badge-ctt">CTT</div>
+          <div class="user-info">
+            <h2>
+              <span id="txtHeaderCompany">CÔNG TY TNHH TAISHODO VIỆ...</span>
+              <span class="pill-dept" id="txtHeaderDept">PP 1</span>
+              <span style="font-size: 11px; opacity:0.8; cursor:pointer;" onclick="openModal('modalSettings')">✏️</span>
+            </h2>
+            <p><span id="txtHeaderName">Trần Thế Thưởng</span> • ID: <span class="id-hl" id="txtHeaderId">5598</span></p>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <div class="btn-cloud" style="background:#00c853; border-color:#00e676;" onclick="showTab('admin')">
+            <span>👑 Admin</span>
+          </div>
+          <div class="btn-cloud" onclick="openModal('modalAuth')">
+            <span class="dot"></span>
+            <span>Cloud</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Month Selector có tính năng Lịch sử tháng -->
+      <div class="month-selector-row">
+        <div class="month-title">
+          <span class="month-nav-arrow" onclick="changeMonth(-1)">&lt;</span>
+          <span id="labelCurrentMonth">THÁNG 09/2026</span>
+          <span class="month-nav-arrow" onclick="changeMonth(1)">&gt;</span>
+        </div>
+        <div class="toggle-pills">
+          <button class="toggle-pill-btn active" id="btnTogglePayslip" onclick="openModal('modalPayslip')">Phiếu lương</button>
+          <button class="toggle-pill-btn" id="btnToggleAccum" onclick="alert('Đã xem lịch sử lũy kế tháng hiện tại')">Lũy kế ngày</button>
+        </div>
+      </div>
+
+      <!-- Card Thực lĩnh -->
+      <div class="net-estimate-card">
+        <div class="card-top-lbl">
+          <span>✨ Thực lĩnh dự kiến cuối tháng:</span>
+          <span class="badge-sync">Đã lưu đám mây</span>
+        </div>
+        <div class="net-value-row">
+          <div class="big-vnd">
+            <span id="displayNet">21,218,000</span>
+            <small>VNĐ</small>
+          </div>
+          <button class="btn-quick-checkin" onclick="openCheckinForDay(todayDate)">
+            <span>+</span> Chấm công
+          </button>
+        </div>
+
+        <div class="mini-metrics-grid">
+          <div class="metric-pill">
+            <div class="lbl">Ngày đi làm</div>
+            <div class="val"><span id="displayWorkDays">21.5</span><small style="opacity:0.7">/24</small></div>
+          </div>
+          <div class="metric-pill">
+            <div class="lbl">Phép + Lễ</div>
+            <div class="val" style="color:#fde047"><span id="displayLeaveDays">2.5</span> ngày</div>
+          </div>
+          <div class="metric-pill">
+            <div class="lbl">Giờ Tăng ca</div>
+            <div class="val"><span id="displayOtHours">23.0</span> giờ</div>
+          </div>
+          <div class="metric-pill">
+            <div class="lbl">Tiền Tăng ca</div>
+            <div class="val" style="color:#6ee7b7">+<span id="displayOtMoney">3,353,741</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 1: TỔNG QUAN ================= -->
+    <div id="viewOverview" class="body-section">
+      <div class="company-mini-card">
+        <div class="comp-left">
+          <div class="comp-icon">🏢</div>
+          <div class="comp-text">
+            <h4>CÔNG TY TNHH TAISHODO VIỆT NAM</h4>
+            <p>NV: Trần Thế Thưởng • Mã: 5598 • BP: PP 1</p>
+          </div>
+        </div>
+        <button class="btn-edit-profile" onclick="openModal('modalSettings')">✏️ Sửa hồ sơ</button>
+      </div>
+
+      <div class="income-structure-card">
+        <div class="section-header-row">
+          <div class="section-title">
+            <span style="color:#00897b; font-size:13px;">📈</span>
+            <span>CƠ CẤU THU NHẬP REALTIME</span>
+          </div>
+          <div class="pill-ot-rate" id="displayHourlyRate">Đơn giá OT: 97,210đ/h</div>
+        </div>
+
+        <div class="income-row-box bg-row-normal">
+          <div class="txt-left">
+            <h5>1. Tổng Lương & Phụ cấp (Mục 1-11)</h5>
+            <p>Công hưởng lương: 24/24 ngày</p>
+          </div>
+          <div class="val-right" style="color:#0f172a;">+<span id="displayFixedGross">19,364,298</span></div>
+        </div>
+
+        <div class="income-row-box bg-row-normal">
+          <div class="txt-left">
+            <h5>2. Thưởng chuyên cần (Mục 18)</h5>
+            <p>Đủ điều kiện hưởng 100%</p>
+          </div>
+          <div class="val-right color-green">+<span id="displayBonus">500,000</span></div>
+        </div>
+
+        <div class="income-row-box bg-row-blue">
+          <div class="txt-left">
+            <h5>3. Tiền Tăng ca & Ca đêm (Mục 19-26)</h5>
+            <p>Tổng <span id="displayOtSummary">23.0 giờ OT (23h x 150%...)</span></p>
+          </div>
+          <div class="val-right color-blue">+<span id="displayOtRow">3,353,741</span></div>
+        </div>
+
+        <div class="income-row-box bg-row-red">
+          <div class="txt-left">
+            <h5 style="color:#991b1b;">4. Khấu trừ BHXH, BHYT, BHTN, KPCĐ</h5>
+            <p style="color:#dc2626;" id="displayDeductSubtitle">BHXH (8%) • BHYT (1.5%) • BHTN (1%) • KPCĐ</p>
+          </div>
+          <div class="val-right color-red">(<span id="displayDeductions">1,999,751</span>)</div>
+        </div>
+
+        <div class="summary-footer-bar">
+          <div class="gross-box">
+            <span>Tổng thu nhập (Gross):</span>
+            <b><span id="displayGross">23,218,039</span> đ</b>
+          </div>
+          <div class="net-box">
+            <span>Số tiền thực lĩnh (Mục 37):</span>
+            <b><span id="displayNetBottom">21,218,000</span> đ</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="ot-rates-card">
+        <div class="section-title">
+          <span style="color:#4f46e5; font-size:13px;">🧮</span>
+          <span>BẢNG ĐƠN GIÁ 1 GIỜ TĂNG CA CỦA BẠN</span>
+        </div>
+        <div class="ot-grid">
+          <div class="ot-rate-cell">
+            <div class="lbl">OT Thường<br>(150%)</div>
+            <div class="rate" id="rateOt150">145,815đ/h</div>
+          </div>
+          <div class="ot-rate-cell">
+            <div class="lbl">Sau 10h / CN<br>(200%)</div>
+            <div class="rate" id="rateOt200">194,420đ/h</div>
+          </div>
+          <div class="ot-rate-cell">
+            <div class="lbl">Đêm liên tục<br>(210%)</div>
+            <div class="rate" id="rateOt210">204,141đ/h</div>
+          </div>
+          <div class="ot-rate-cell">
+            <div class="lbl">Ngày Lễ (300%)</div>
+            <div class="rate" id="rateOt300">291,630đ/h</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 2: LỊCH CHẤM CÔNG THÁNG ================= -->
+    <div id="viewTimekeeping" class="body-section" style="display:none;">
+      <div class="calendar-container-card">
+        <div class="cal-header-row">
+          <div class="cal-title-box">
+            <h3 id="calHeaderTitle">LỊCH CHẤM CÔNG THÁNG 09/2026</h3>
+            <p>Chạm vào ngày bất kỳ để nhập công & giờ tăng ca</p>
+          </div>
+          <div class="cal-badge-target">Chuẩn: 24 công</div>
+        </div>
+
+        <div class="cal-legend-row">
+          <div class="legend-item"><span class="legend-dot dot-work"></span> Đi làm (1.0)</div>
+          <div class="legend-item"><span class="legend-dot dot-leave"></span> Nghỉ phép (0.5/1.0)</div>
+          <div class="legend-item"><span class="legend-dot dot-holiday"></span> Lễ 100%</div>
+          <div class="legend-item"><span class="legend-dot dot-ot"></span> Có Tăng ca (OT)</div>
+        </div>
+
+        <div class="cal-weekday-row">
+          <span>T2</span>
+          <span>T3</span>
+          <span>T4</span>
+          <span>T5</span>
+          <span>T6</span>
+          <span class="sat">T7</span>
+          <span class="sun">CN</span>
+        </div>
+
+        <div class="cal-days-grid" id="calendarDaysGrid"></div>
+      </div>
+
+      <div class="recent-logs-card">
+        <h4>NHẬT KÝ CHẤM CÔNG & THU NHẬP TỪNG NGÀY</h4>
+        <div id="dayDetailsLog" style="font-size: 11.5px; color:#475569; padding: 4px 0;">
+          Chọn một ngày trên lịch để xem chi tiết giờ làm việc & tăng ca.
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 3: QUẢN TRỊ VIÊN (ADMIN HUB) ================= -->
+    <div id="viewAdmin" class="body-section" style="display:none;">
+      <div class="calendar-container-card" style="border-left: 4px solid #00796b;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div>
+            <h3 style="font-size:13px; font-weight:800; color:#0f172a;">👑 CỔNG QUẢN TRỊ VIÊN (ADMIN)</h3>
+            <p style="font-size:10px; color:#64748b;">Quản lý toàn bộ nhân viên & duyệt bảng lương công ty</p>
+          </div>
+          <button style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; font-size:10px; padding:3px 6px;" onclick="showTab('overview')">Thoát Admin</button>
+        </div>
+
+        <div style="background:#092923; color:white; border-radius:12px; padding:10px; margin-bottom:10px;">
+          <div style="font-size:10px; color:#80cbc4; font-weight:bold;">TỔNG QUỸ LƯƠNG CÔNG TY DỰ KIẾN:</div>
+          <div style="font-size:20px; font-weight:900; color:#fde047; margin:2px 0;">98,168,000 đ</div>
+          <div style="display:flex; justify-content:space-between; font-size:9.5px; opacity:0.8;">
+            <span>5 Nhân sự • 108.5h OT</span>
+            <span style="color:#4ade80;">100% đã nộp chấm công</span>
+          </div>
+        </div>
+
+        <div style="font-size:11px; font-weight:bold; color:#1e293b; margin-bottom:6px;">DANH SÁCH NHÂN SỰ & DUYỆT CÔNG:</div>
+        
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11.5px; font-weight:bold;">Trần Thế Thưởng (ID: 5598)</div>
+            <div style="font-size:9.5px; color:#64748b;">Sản xuất - PP1 • 24 công • 23h OT</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11.5px; font-weight:bold; color:#00796b;">21,218,000 đ</div>
+            <span style="background:#dcfce7; color:#166534; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:4px;">Đã duyệt</span>
+          </div>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11.5px; font-weight:bold;">Nguyễn Văn An (ID: 5599)</div>
+            <div style="font-size:9.5px; color:#64748b;">Sản xuất - PP1 • 23.5 công • 18h OT</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11.5px; font-weight:bold; color:#00796b;">19,850,000 đ</div>
+            <span style="background:#dcfce7; color:#166534; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:4px;">Đã duyệt</span>
+          </div>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11.5px; font-weight:bold;">Lê Thị Mai (ID: 5601)</div>
+            <div style="font-size:9.5px; color:#64748b;">Kho vận - Logistics • 24 công • 12h OT</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11.5px; font-weight:bold; color:#00796b;">17,400,000 đ</div>
+            <span style="background:#dcfce7; color:#166534; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:4px;">Đã duyệt</span>
+          </div>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:8px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:11.5px; font-weight:bold;">Phạm Quốc Hùng (ID: 5610)</div>
+            <div style="font-size:9.5px; color:#64748b;">Kỹ thuật - Bảo trì • 22 công • 30.5h OT</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11.5px; font-weight:bold; color:#00796b;">23,500,000 đ</div>
+            <span style="background:#dcfce7; color:#166534; font-size:9px; font-weight:bold; padding:1px 5px; border-radius:4px;">Đã duyệt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FIXED BOTTOM NAV BAR -->
+  <div class="bottom-nav-bar">
+    <button class="nav-item active" id="navBtnOverview" onclick="showTab('overview')">
+      <div class="nav-icon-wrap"><span class="nav-icon">📈</span></div>
+      <span>Tổng quan</span>
+    </button>
+    <button class="nav-item" id="navBtnTimekeeping" onclick="showTab('timekeeping')">
+      <div class="nav-icon-wrap"><span class="nav-icon">📅</span></div>
+      <span>Chấm công</span>
+    </button>
+    <button class="nav-item" id="navBtnPayslip" onclick="openModal('modalPayslip')">
+      <div class="nav-icon-wrap"><span class="nav-icon">📄</span></div>
+      <span>Phiếu lương</span>
+    </button>
+    <button class="nav-item" id="navBtnSettings" onclick="openModal('modalSettings')">
+      <div class="nav-icon-wrap"><span class="nav-icon">⚙️</span></div>
+      <span>Hệ số & BH</span>
+    </button>
+    <button class="nav-item" id="navBtnApk" onclick="openModal('modalApk')">
+      <div class="nav-icon-wrap"><span class="nav-icon">📱</span></div>
+      <span>Lưu & APK</span>
+    </button>
+  </div>
+</div>
+
+<!-- ================= MODAL TẢI & CÀI ĐẶT APK LÊN ĐIỆN THOẠI ================= -->
+<div class="modal-overlay" id="modalApk" onclick="if(event.target===this)closeModal('modalApk')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>📱 Cài Đặt Ứng Dụng Lên Điện Thoại</h3>
+      <button class="btn-close" onclick="closeModal('modalApk')">&times;</button>
+    </div>
+    
+    <div style="background:#e0f2f1; border:1px solid #80cbc4; border-radius:10px; padding:10px; margin-bottom:12px;">
+      <h4 style="font-size:12px; font-weight:bold; color:#00796b; margin-bottom:4px;">⚡ CÁCH 1: Cài đặt ngay lên điện thoại (Khuyên dùng - 3 giây)</h4>
+      <p style="font-size:11px; color:#004d40; line-height:1.4;">
+        Mở đường link ứng dụng trên trình duyệt Chrome điện thoại Android $\rightarrow$ Nhấn nút menu (3 chấm) $\rightarrow$ Chọn <b>"Thêm vào Màn hình chính"</b> hoặc <b>"Cài đặt ứng dụng"</b>. App sẽ xuất hiện trên màn hình điện thoại như một file APK thực thụ, có icon và mở toàn màn hình!
+      </p>
+    </div>
+
+    <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:10px; margin-bottom:12px;">
+      <h4 style="font-size:12px; font-weight:bold; color:#1e293b; margin-bottom:4px;">📦 CÁCH 2: Tải file .APK gốc (Biên dịch Native)</h4>
+      <p style="font-size:11px; color:#475569; line-height:1.4;">
+        Mã nguồn dự án đã có sẵn file tự động build trên đám mây tại <code>.github/workflows/build-apk.yml</code>. Bạn chỉ cần đẩy repo lên GitHub cá nhân và bấm <b>Run workflow</b>, hệ thống sẽ tự động xuất file <b>app-release.apk</b> để tải về cài đặt trực tiếp.
+      </p>
+    </div>
+
+    <button class="btn-save-modal" onclick="closeModal('modalApk')">ĐÃ HIỂU</button>
+  </div>
+</div>
+
+<!-- ================= MODAL ĐĂNG NHẬP CLOUD / EMAIL / GOOGLE ================= -->
+<div class="modal-overlay" id="modalAuth" onclick="if(event.target===this)closeModal('modalAuth')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>☁️ Đăng Nhập Cloud & Đồng Bộ Dữ Liệu</h3>
+      <button class="btn-close" onclick="closeModal('modalAuth')">&times;</button>
+    </div>
+    <p style="font-size:11px; color:#64748b; margin-bottom:12px;">Đăng nhập để xem lại lịch sử bảng lương trên mọi máy Android & iOS.</p>
+    <div class="form-row">
+      <label>Email nhân viên:</label>
+      <input type="email" id="authEmail" value="thethuong.taishodo@example.com">
+    </div>
+    <div class="form-row">
+      <label>Mật khẩu:</label>
+      <input type="password" id="authPass" value="12345678">
+    </div>
+    <button class="btn-save-modal" onclick="closeModal('modalAuth'); alert('Đăng nhập Email thành công! Dữ liệu Cloud đã tải về.')">ĐĂNG NHẬP EMAIL</button>
+    <button class="btn-save-modal" style="background:white; color:#1e293b; border:1px solid #cbd5e1; margin-top:8px;" onclick="closeModal('modalAuth'); alert('Đăng nhập Google thành công! Toàn bộ lịch sử bảng lương đã đồng bộ.')">🔴 Đăng nhập với Google</button>
+  </div>
+</div>
+
+<!-- ================= MODAL SỬA CẤU HÌNH BHXH (2X2 GRID KHÔNG BỊ CHE) ================= -->
+<div class="modal-overlay" id="modalSettings" onclick="if(event.target===this)closeModal('modalSettings')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>⚙️ Cấu Hình Hệ Số & Bảo Hiểm</h3>
+      <button class="btn-close" onclick="closeModal('modalSettings')">&times;</button>
+    </div>
+
+    <div class="ins-rate-box">
+      <h4>Tỷ lệ trích đóng Bảo hiểm:</h4>
+      <div class="ins-rate-grid">
+        <div class="ins-input-item">
+          <label>BHXH (%)</label>
+          <input type="number" id="cfgBhxh" value="8.0" step="0.1" oninput="recalculate()">
+        </div>
+        <div class="ins-input-item">
+          <label>BHYT (%)</label>
+          <input type="number" id="cfgBhyt" value="1.5" step="0.1" oninput="recalculate()">
+        </div>
+        <div class="ins-input-item">
+          <label>BHTN (%)</label>
+          <input type="number" id="cfgBhtn" value="1.0" step="0.1" oninput="recalculate()">
+        </div>
+        <div class="ins-input-item">
+          <label>Phí KPCĐ (VNĐ)</label>
+          <input type="number" id="cfgUnion" value="40000" step="5000" oninput="recalculate()">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Lương cơ bản (VNĐ):</label>
+      <input type="number" id="cfgBaseSalary" value="15509700" oninput="recalculate()">
+    </div>
+    <div class="form-row">
+      <label>PC Lương cơ bản (VNĐ):</label>
+      <input type="number" id="cfgBaseSalaryAllowance" value="1654598" oninput="recalculate()">
+    </div>
+    <div class="form-row">
+      <label>PC Chức vụ (VNĐ):</label>
+      <input type="number" id="cfgPositionAllowance" value="1500000" oninput="recalculate()">
+    </div>
+    <div class="form-row">
+      <label>Trợ cấp nhà ở, đi lại (Miễn BHXH):</label>
+      <input type="number" id="cfgHousing" value="700000" oninput="recalculate()">
+    </div>
+    <div class="form-row">
+      <label>Tiền chuyên cần (VNĐ):</label>
+      <input type="number" id="cfgBonus" value="500000" oninput="recalculate()">
+    </div>
+
+    <button class="btn-save-modal" onclick="closeModal('modalSettings'); alert('Đã lưu cấu hình mới thành công!')">LƯU CẤU HÌNH</button>
+  </div>
+</div>
+
+<!-- ================= MODAL CHẤM CÔNG THEO NGÀY ================= -->
+<div class="modal-overlay" id="modalCheckin" onclick="if(event.target===this)closeModal('modalCheckin')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalCheckinTitle">📅 Chấm Công Ngày 15/09/2026</h3>
+      <button class="btn-close" onclick="closeModal('modalCheckin')">&times;</button>
+    </div>
+    <div class="form-row">
+      <label>Loại ngày công:</label>
+      <select id="modalWorkType" onchange="saveDayFromModal()">
+        <option value="1.0">Đi làm đủ ngày (1.0 công)</option>
+        <option value="0.5">Làm nửa ngày (0.5 công)</option>
+        <option value="1.0-leave">Nghỉ phép năm (100% lương)</option>
+        <option value="1.0-holiday">Nghỉ lễ/chế độ (100% lương)</option>
+        <option value="0.7">Nghỉ ngừng việc (70% lương)</option>
+        <option value="0.0">Nghỉ không lương (0 công)</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Hệ số tăng ca (Theo phiếu Taishodo):</label>
+      <select id="modalOtType" onchange="saveDayFromModal()">
+        <option value="1.5">Giờ làm thường 150% (Mặc định)</option>
+        <option value="2.0">Sau 10h / Chủ nhật 200%</option>
+        <option value="2.1">Đêm thường liên tục 210%</option>
+        <option value="2.7">Chủ nhật sau 10h 270%</option>
+        <option value="3.0">Ngày Lễ 300%</option>
+        <option value="3.9">Ngày Lễ sau 10h 390%</option>
+        <option value="1.3">Phụ cấp ca đêm 130%</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Số giờ tăng ca (OT) ngày này:</label>
+      <input type="number" id="modalDayOtHours" value="2.0" step="0.5" min="0" oninput="saveDayFromModal()">
+    </div>
+    <button class="btn-save-modal" onclick="closeModal('modalCheckin'); alert('Đã cập nhật ngày công thành công!')">HOÀN TẤT & LƯU</button>
+  </div>
+</div>
+
+<!-- ================= MODAL PHIẾU LƯƠNG TAISHODO ================= -->
+<div class="modal-overlay" id="modalPayslip" onclick="if(event.target===this)closeModal('modalPayslip')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalPayslipTitle">📄 Bảng Lương Chi Tiết Tháng 09/2026</h3>
+      <button class="btn-close" onclick="closeModal('modalPayslip')">&times;</button>
+    </div>
+    <div style="font-size:11px; line-height:1.6; border:1px solid #cbd5e1; border-radius:8px; overflow:hidden;">
+      <div style="background:#d9f99d; padding:6px 10px; font-weight:bold;">Trần Thế Thưởng (5598) - PP 1</div>
+      <div style="padding:8px;">
+        <div style="display:flex; justify-content:space-between;"><span>1. Lương cơ bản:</span><b>15,509,700</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>2. PC Lương cơ bản:</span><b>1,654,598</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>3. PC Chức vụ:</span><b>1,500,000</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>11. Trợ cấp nhà ở:</span><b>700,000</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>14. Ngày đi làm:</span><b id="plWorkDays">21.5 công</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>15. Nghỉ phép năm:</span><b id="plLeaveDays">0.5 công</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>16. Nghỉ lễ 100%:</span><b id="plHolidayDays">2.0 công</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>18. Chuyên cần:</span><b>500,000</b></div>
+        <div style="display:flex; justify-content:space-between;"><span>19. OT 150%:</span><b id="plOt">3,353,741</b></div>
+        <hr style="margin:4px 0; border:none; border-top:1px dashed #cbd5e1;">
+        <div style="display:flex; justify-content:space-between; color:#dc2626;"><span>32. BHXH (8%):</span><b id="plBhxh">(1,493,144)</b></div>
+        <div style="display:flex; justify-content:space-between; color:#dc2626;"><span>33. BHYT (1.5%):</span><b id="plBhyt">(279,964)</b></div>
+        <div style="display:flex; justify-content:space-between; color:#dc2626;"><span>34. BHTN (1%):</span><b id="plBhtn">(186,643)</b></div>
+        <div style="display:flex; justify-content:space-between; color:#dc2626;"><span>35. KPCĐ:</span><b id="plUnion">(40,000)</b></div>
+        <div style="display:flex; justify-content:space-between; background:#fef08a; padding:4px; font-weight:800; color:#b91c1c; margin-top:4px;">
+          <span>37. THỰC LĨNH:</span><span id="plNet">21,218,000 đ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentMonth = 9;
+  let currentYear = 2026;
+  let todayDate = 15;
+  let activeSelectedDate = 15;
+
+  // Cấu trúc dữ liệu lịch sử từng tháng (Multi-month History)
+  const historyStore = {
+    // Tháng 8/2026 (Lịch sử tháng trước)
+    '2026-08': {
+      workDays: 22, leaveDays: 1.0, otHours: 18.0,
+      days: {}
+    },
+    // Tháng 9/2026 (Tháng hiện tại khớp 100% phiếu Taishodo)
+    '2026-09': {
+      workDays: 21.5, leaveDays: 2.5, otHours: 23.0,
+      days: {}
+    },
+    // Tháng 10/2026 (Tháng tiếp theo)
+    '2026-10': {
+      workDays: 24, leaveDays: 0.0, otHours: 12.0,
+      days: {}
+    }
+  };
+
+  // Khởi tạo tháng 9 mặc định
+  for(let d=1; d<=30; d++) {
+    const isSun = (d % 7 === 6);
+    if(d === 1 || d === 2) {
+      historyStore['2026-09'].days[d] = { status: '1.0-holiday', ot: 0, otType: 1.5 };
+    } else if(d === 3) {
+      historyStore['2026-09'].days[d] = { status: '1.0-leave', ot: 0, otType: 1.5 };
+    } else if(isSun) {
+      historyStore['2026-09'].days[d] = { status: 'off', ot: 0, otType: 2.0 };
+    } else if(d <= 24) {
+      let ot = (d <= 14) ? 2.0 : (d === 15 ? 1.0 : 0);
+      historyStore['2026-09'].days[d] = { status: '1.0', ot: ot, otType: 1.5 };
+    } else {
+      historyStore['2026-09'].days[d] = { status: '1.0', ot: 0, otType: 1.5 };
+    }
+  }
+
+  function getActiveMonthData() {
+    const key = `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
+    if (!historyStore[key]) {
+      historyStore[key] = { workDays: 0, leaveDays: 0, otHours: 0, days: {} };
+      for (let d = 1; d <= 30; d++) {
+        historyStore[key].days[d] = { status: (d % 7 === 6) ? 'off' : '1.0', ot: 0, otType: 1.5 };
+      }
+    }
+    return historyStore[key].days;
+  }
+
+  function changeMonth(delta) {
+    currentMonth += delta;
+    if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+    else if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+
+    const monthStr = String(currentMonth).padStart(2, '0');
+    document.getElementById('labelCurrentMonth').innerText = `THÁNG ${monthStr}/${currentYear}`;
+    document.getElementById('calHeaderTitle').innerText = `LỊCH CHẤM CÔNG THÁNG ${monthStr}/${currentYear}`;
+    document.getElementById('modalPayslipTitle').innerText = `📄 Bảng Lương Chi Tiết Tháng ${monthStr}/${currentYear}`;
+
+    renderCalendar();
+    recalculate();
+  }
+
+  function showTab(tab) {
+    document.getElementById('viewOverview').style.display = (tab === 'overview') ? 'block' : 'none';
+    document.getElementById('viewTimekeeping').style.display = (tab === 'timekeeping') ? 'block' : 'none';
+    document.getElementById('viewAdmin').style.display = (tab === 'admin') ? 'block' : 'none';
+    
+    document.getElementById('navBtnOverview').className = 'nav-item' + (tab === 'overview' ? ' active' : '');
+    document.getElementById('navBtnTimekeeping').className = 'nav-item' + (tab === 'timekeeping' ? ' active' : '');
+  }
+
+  function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  function openCheckinForDay(day) {
+    activeSelectedDate = day;
+    const monthStr = String(currentMonth).padStart(2, '0');
+    document.getElementById('modalCheckinTitle').innerText = `📅 Chấm Công Ngày ${day}/${monthStr}/${currentYear}`;
+    const mData = getActiveMonthData();
+    const rec = mData[day] || { status: '1.0', ot: 0, otType: 1.5 };
+    document.getElementById('modalWorkType').value = rec.status;
+    document.getElementById('modalDayOtHours').value = rec.ot;
+    document.getElementById('modalOtType').value = rec.otType || 1.5;
+    openModal('modalCheckin');
+  }
+
+  function saveDayFromModal() {
+    const st = document.getElementById('modalWorkType').value;
+    const ot = parseFloat(document.getElementById('modalDayOtHours').value) || 0;
+    const otType = parseFloat(document.getElementById('modalOtType').value) || 1.5;
+    const mData = getActiveMonthData();
+    mData[activeSelectedDate] = { status: st, ot: ot, otType: otType };
+    renderCalendar();
+    recalculate();
+  }
+
+  function fmt(n) { return Math.round(n).toLocaleString('vi-VN'); }
+
+  function renderCalendar() {
+    const grid = document.getElementById('calendarDaysGrid');
+    grid.innerHTML = '';
+    const mData = getActiveMonthData();
+
+    // Tháng 9/2026: ngày 1 là Thứ 3 -> 1 ô trống cho T2
+    let firstOffset = (currentMonth === 9) ? 1 : (currentMonth === 8 ? 5 : 3);
+    for(let o=0; o<firstOffset; o++) {
+      const emptyCell = document.createElement('div');
+      emptyCell.className = 'cal-day-cell empty';
+      grid.appendChild(emptyCell);
+    }
+
+    const daysCount = (currentMonth === 2) ? 28 : (currentMonth === 8 || currentMonth === 10 || currentMonth === 12 ? 31 : 30);
+
+    for (let day = 1; day <= daysCount; day++) {
+      const isSun = ((day + firstOffset - 1) % 7 === 6);
+      const cell = document.createElement('div');
+      cell.className = 'cal-day-cell' + (isSun ? ' is-sun' : '') + (day === activeSelectedDate ? ' selected' : '');
+      cell.onclick = () => {
+        activeSelectedDate = day;
+        renderCalendar();
+        updateDayLog(day);
+        openCheckinForDay(day);
+      };
+
+      const dayNum = document.createElement('div');
+      dayNum.className = 'day-num';
+      dayNum.innerText = day;
+      cell.appendChild(dayNum);
+
+      const badges = document.createElement('div');
+      badges.className = 'cell-badges';
+
+      const rec = mData[day];
+      if (rec) {
+        if (rec.status === '1.0') {
+          badges.innerHTML += '<span class="mini-badge-dot dot-work"></span>';
+        } else if (rec.status === '1.0-holiday') {
+          badges.innerHTML += '<span class="mini-badge-dot dot-holiday"></span>';
+        } else if (rec.status.includes('leave')) {
+          badges.innerHTML += '<span class="mini-badge-dot dot-leave"></span>';
+        }
+        if (rec.ot > 0) {
+          badges.innerHTML += `<span class="mini-ot-badge">${rec.ot}h</span>`;
+        }
+      }
+
+      cell.appendChild(badges);
+      grid.appendChild(cell);
+    }
+  }
+
+  function updateDayLog(day) {
+    const mData = getActiveMonthData();
+    const rec = mData[day] || { status: '1.0', ot: 0 };
+    let stName = 'Đi làm đủ ngày';
+    if(rec.status === '1.0-holiday') stName = 'Nghỉ lễ 100% lương';
+    else if(rec.status.includes('leave')) stName = 'Nghỉ phép năm';
+    else if(rec.status === 'off') stName = 'Ngày nghỉ';
+
+    const monthStr = String(currentMonth).padStart(2, '0');
+    document.getElementById('dayDetailsLog').innerHTML = `
+      <b>Ngày ${day}/${monthStr}/${currentYear}:</b> Trạng thái: <span style="color:#00796b; font-weight:bold;">${stName}</span> | 
+      Tăng ca: <span style="color:#0284c7; font-weight:bold;">${rec.ot} giờ</span>
+    `;
+  }
+
+  function recalculate() {
+    const base = parseFloat(document.getElementById('cfgBaseSalary').value) || 15509700;
+    const basePc = parseFloat(document.getElementById('cfgBaseSalaryAllowance').value) || 1654598;
+    const posPc = parseFloat(document.getElementById('cfgPositionAllowance').value) || 1500000;
+    const housing = parseFloat(document.getElementById('cfgHousing').value) || 700000;
+    const bonus = parseFloat(document.getElementById('cfgBonus').value) || 500000;
+
+    const rBhxh = (parseFloat(document.getElementById('cfgBhxh').value) || 8.0) / 100.0;
+    const rBhyt = (parseFloat(document.getElementById('cfgBhyt').value) || 1.5) / 100.0;
+    const rBhtn = (parseFloat(document.getElementById('cfgBhtn').value) || 1.0) / 100.0;
+    const unionFee = parseFloat(document.getElementById('cfgUnion').value) || 40000;
+
+    const insBase = base + basePc + posPc; // 18,664,298
+    const fixedGross = insBase + housing; // 19,364,298
+    const hourlyRate = insBase / (24 * 8.0); // 97,209.88
+
+    const mData = getActiveMonthData();
+    let totalWorkDays = 0;
+    let totalLeaves = 0;
+    let totalHolidays = 0;
+    let totalOtHours = 0;
+    let totalOtAmount = 0;
+
+    for (let d in mData) {
+      const r = mData[d];
+      if (r) {
+        if (r.status === '1.0') totalWorkDays += 1;
+        else if (r.status === '0.5') totalWorkDays += 0.5;
+        else if (r.status === '1.0-leave') totalLeaves += 1;
+        else if (r.status === '1.0-holiday') totalHolidays += 1;
+
+        if (r.ot > 0) {
+          totalOtHours += r.ot;
+          totalOtAmount += r.ot * hourlyRate * (r.otType || 1.5);
+        }
+      }
+    }
+
+    const dBhxh = insBase * rBhxh;
+    const dBhyt = insBase * rBhyt;
+    const dBhtn = insBase * rBhtn;
+    const totalDeduct = dBhxh + dBhyt + dBhtn + unionFee;
+
+    const gross = fixedGross + bonus + totalOtAmount;
+    const net = gross - totalDeduct;
+
+    // Cập nhật Top Card
+    document.getElementById('displayNet').innerText = fmt(net);
+    document.getElementById('displayWorkDays').innerText = totalWorkDays.toFixed(1);
+    document.getElementById('displayLeaveDays').innerText = (totalLeaves + totalHolidays).toFixed(1);
+    document.getElementById('displayOtHours').innerText = totalOtHours.toFixed(1);
+    document.getElementById('displayOtMoney').innerText = fmt(totalOtAmount);
+
+    // Cập nhật Body
+    document.getElementById('displayHourlyRate').innerText = `Đơn giá OT: ${fmt(hourlyRate)}đ/h`;
+    document.getElementById('displayFixedGross').innerText = fmt(fixedGross);
+    document.getElementById('displayBonus').innerText = fmt(bonus);
+    document.getElementById('displayOtSummary').innerText = `${totalOtHours.toFixed(1)} giờ OT (150%...)`;
+    document.getElementById('displayOtRow').innerText = fmt(totalOtAmount);
+    document.getElementById('displayDeductions').innerText = fmt(totalDeduct);
+    document.getElementById('displayGross').innerText = fmt(gross);
+    document.getElementById('displayNetBottom').innerText = fmt(net);
+
+    // Cập nhật Rates Grid
+    document.getElementById('rateOt150').innerText = `${fmt(hourlyRate * 1.5)}đ/h`;
+    document.getElementById('rateOt200').innerText = `${fmt(hourlyRate * 2.0)}đ/h`;
+    document.getElementById('rateOt210').innerText = `${fmt(hourlyRate * 2.1)}đ/h`;
+    document.getElementById('rateOt300').innerText = `${fmt(hourlyRate * 3.0)}đ/h`;
+
+    // Cập nhật Modal Payslip
+    if(document.getElementById('plWorkDays')) document.getElementById('plWorkDays').innerText = `${totalWorkDays} công`;
+    if(document.getElementById('plLeaveDays')) document.getElementById('plLeaveDays').innerText = `${totalLeaves} công`;
+    if(document.getElementById('plHolidayDays')) document.getElementById('plHolidayDays').innerText = `${totalHolidays} công`;
+    if(document.getElementById('plOt')) document.getElementById('plOt').innerText = fmt(totalOtAmount);
+    if(document.getElementById('plBhxh')) document.getElementById('plBhxh').innerText = `(${fmt(dBhxh)})`;
+    if(document.getElementById('plBhyt')) document.getElementById('plBhyt').innerText = `(${fmt(dBhtn)})`;
+    if(document.getElementById('plBhtn')) document.getElementById('plBhtn').innerText = `(${fmt(dBhtn)})`;
+    if(document.getElementById('plUnion')) document.getElementById('plUnion').innerText = `(${fmt(unionFee)})`;
+    if(document.getElementById('plNet')) document.getElementById('plNet').innerText = `${fmt(net)} đ`;
+  }
+
+  renderCalendar();
+  recalculate();
+</script>
+
+</body>
+</html>
