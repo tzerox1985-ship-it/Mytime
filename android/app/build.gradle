@@ -27,7 +27,7 @@ android {
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
-        compileOptions {
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -55,4 +55,11 @@ android {
 
 flutter {
     source '../..'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.window:window:1.2.0'
+        force 'androidx.window:window-java:1.2.0'
+    }
 }
